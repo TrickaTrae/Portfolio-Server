@@ -1,0 +1,13 @@
+const mongoose = require('mongoose');
+
+const ProjectSchema = mongoose.Schema({
+    title: String,
+    description: String,
+    tech: String,
+    site_link: String,
+    code_link: String,
+    image: String,
+    filters: String
+});
+
+module.exports = mongoose.model('Project', ProjectSchema);
