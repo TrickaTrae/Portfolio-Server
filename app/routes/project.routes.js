@@ -21,7 +21,7 @@ module.exports = (app) => {
     const upload = multer({
         storage: storage,
         fileFilter: fileFilter,
-        limits: { fileSize: 1024 * 1024 * 8 } // max filesize set to 8 mb
+        limits: { fileSize: 1024 * 1024 * 16 } // max filesize set to 16 mb
     });
 
     app.post('/projects', upload.single('image'), projects.create);
