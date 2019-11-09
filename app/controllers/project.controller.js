@@ -45,10 +45,6 @@ exports.findAll = (req, res) => {
 
 };
 
-// find a single project with a id
-exports.findOne = (req, res) => {
-};
-
 // update a project identified by the Id in the request
 exports.update = (req, res) => {
     let request;

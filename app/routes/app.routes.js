@@ -1,7 +1,8 @@
 module.exports = (app) => {
     const projects = require('../controllers/project.controller.js');
+    const users = require("../controllers/user.controller.js");
 
-    // image handling
+    // project image handling
     const multer = require('multer');
     const storage = multer.diskStorage({
         destination: (req, file, cb) => {
@@ -24,9 +25,12 @@ module.exports = (app) => {
         limits: { fileSize: 1024 * 1024 * 16 } // max filesize set to 16 mb
     });
 
+    // projects
     app.post('/projects', upload.single('image'), projects.create);
     app.get('/projects', projects.findAll);
-    app.get('/projects/:projectId', projects.findOne);
     app.put('/projects/:projectId', upload.single('image'), projects.update);
     app.delete('/projects/:projectId', projects.delete);
+
+    // users
+    app.post('/users', users.create);
 }

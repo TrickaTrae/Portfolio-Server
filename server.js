@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
     res.json({ "message" : "Welcome to Traeger Winn's portfolio API" });
 });
 
-require('./app/routes/project.routes.js')(app);
+require('./app/routes/app.routes.js')(app);
 
 let port = process.env.PORT;
 if (port == null || port == ""){
