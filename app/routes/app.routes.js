@@ -1,6 +1,7 @@
 module.exports = (app) => {
     const projects = require('../controllers/project.controller.js');
     const users = require("../controllers/user.controller.js");
+    const userSessions = require("../controllers/userSession.controller.js");
 
     // project image handling
     const multer = require('multer');
@@ -32,5 +33,10 @@ module.exports = (app) => {
     app.delete('/projects/:projectId', projects.delete);
 
     // users
-    app.post('/users', users.create);
+    app.post('/users/sign-up', users.create);
+
+    // userSessions
+    app.post('/users/sign-in', userSessions.create);
+    app.get('/users/sign-out/:userSessionId', userSessions.findOne);
+    app.get('/users/verifyUserSession/:userSessionId', userSessions.verifyUserSession);
 }

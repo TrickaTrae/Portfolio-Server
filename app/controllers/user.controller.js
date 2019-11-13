@@ -2,8 +2,6 @@ const User = require("../models/user.model.js");
 
 // create a new user / sign up
 exports.create = (req, res) => {
-    console.log("req.body: ", req.body);
-
     if(!req.body.userName || !req.body.password) {
         return res.status(400).send({
             message: "Username and password required!"
