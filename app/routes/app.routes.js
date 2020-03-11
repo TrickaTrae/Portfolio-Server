@@ -17,7 +17,7 @@ module.exports = (app) => {
     const s3 = new AWS.S3();
     const storage = multerS3({
         s3: s3,
-        bucket: 'tw-portfolio-project-images',
+        bucket: process.env.AWS_BUCKET_NAME,
         acl: 'public-read',
         metadata: (req, file, cb) => {
             cb(null, {fieldName: file.originalname});

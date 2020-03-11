@@ -8,7 +8,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(cors({}));
-app.use('/uploads', express.static('uploads'));
+require('dotenv').config()
 
 mongoose.Promise = global.Promise;
 mongoose.connect(dbConfig.url, {
