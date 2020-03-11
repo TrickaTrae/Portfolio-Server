@@ -2,13 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dbConfig = require('./config/database.config.js');
 const mongoose = require('mongoose');
-let cors = require('cors');
+const cors = require('cors');
+require('dotenv').config()
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(cors({}));
-require('dotenv').config()
+app.use(cors());
 
 mongoose.Promise = global.Promise;
 mongoose.connect(dbConfig.url, {
