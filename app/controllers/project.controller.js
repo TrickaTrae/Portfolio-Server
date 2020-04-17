@@ -107,7 +107,7 @@ exports.update = (req, res) => {
                     // delete image from aws s3
                     const s3 = new AWS.S3();
                     s3.deleteObject({
-                        Bucket: 'tw-portfolio-project-images',
+                        Bucket: process.env.AWS_BUCKET_NAME,
                         Key: result.imageS3Key
                     }, (err) => {
                         if(err){
@@ -152,37 +152,31 @@ exports.update = (req, res) => {
     }
 };
 
-// delete a project with the specified Id in the request
+// delete a project with the specified Id in the request, and delete image from aws s3
 exports.delete = (req, res) => {
-    Project.findOne({ _id: req.params.projectId }).then(project => {
-        if(!project) {
-            return res.status(404).send({
-                message: "Note not found with id " + req.params.projectId
-            });
-        } else {
-            // delete image from aws s3
-            const s3 = new AWS.S3();
-            s3.deleteObject({
-                Bucket: 'tw-portfolio-project-images',
-                Key: project.imageS3Key
-            }, (err) => {
-                if(err){
-                    console.log("error while trying to delete image from aws s3: ", err);
-                } else {
-                    console.log("successfully deleted image from aws s3!");
-                }
-            })
-    
-            // delete project from db
-            Project.deleteOne({ _id: project._id }, (error, result) => {
-                if(!error && result.ok){
-                    res.send({message: "Note deleted successfully!"});
-                } else {
-                    return res.status(500).send({
-                        message: "An error occured while trying to delete project: " + error
-                    });
-                }
-            })
-        }
-    })
+    Project.findOneAndDelete({ _id: req.params.projectId}).then(project => {
+
+        const s3 = new AWS.S3();
+        s3.deleteObject({
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: project.imageS3Key
+        }, (err) => {
+            if(err){
+                console.log("Error while trying to delete image from aws s3: ", err);
+            } else {
+                console.log("Successfully deleted image from aws s3!");
+            }
+        })
+
+        res.send({
+            success: true,
+            message: "Project successfully deleted!"
+        })
+
+    }).catch(err => {
+        return res.status(500).send({
+            success: false,
+            message: "Error deleting project: " + err
+        });
+    });
 };
