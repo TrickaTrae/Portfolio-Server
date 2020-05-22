@@ -1,49 +1,53 @@
 const UserSession = require("../models/userSession.model.js");
 const User = require("../models/user.model.js");
 
-// create a new user session
+// create a new user session / sign in
 exports.create = (req, res) => {
     if(!req.body.userName || !req.body.password) {
         return res.status(400).send({
             message: "Username and password required!"
         })
-    }
-
-    User.findOne({userName: req.body.userName}, (error, result) => {
-        if(error){
-            return res.status(400).send({
-                message: "Error: " + error
-            })
-        } else if(!result) {
-            return res.status(400).send({
-                message: "Invalid Username!"
-            })
-        } else if(result) {
-            const userFound = result;
-
-            if(!userFound.validPassword(req.body.password)) {
+    } else {
+        User.findOne({userName: req.body.userName}, (error, result) => {
+            if(error){
                 return res.status(400).send({
-                    message: "Invalid Password!"
+                    message: "Error: " + error
                 })
-            } else if(userFound.isApproved === false){
+            } else if(!result) {
                 return res.status(400).send({
-                    message: "This user is not authorized to sign in!"
+                    message: "Invalid User!"
                 })
-            } else {
-                const newUserSession = new UserSession({
-                    userId: userFound._id
-                })
-
-                newUserSession.save().then(data => {
-                    res.send({success: true, data});
-                }).catch(err => {
-                    res.status(500).send({
-                        message: err.message || "Some error occured while signing the user in"
+            } else if(result) {
+                const userFound = result;
+    
+                if(!userFound.validPassword(req.body.password)) {
+                    return res.status(400).send({
+                        message: "Invalid Password!"
                     })
-                })
+                } else if(userFound.isApproved === false){
+                    return res.status(400).send({
+                        message: "This account has not been approved yet!"
+                    })
+                } else {
+                    const newUserSession = new UserSession({
+                        userId: userFound._id
+                    })
+    
+                    newUserSession.save().then(data => {
+                        res.send({
+                            success: true,
+                            message: "Successfully signed in!",
+                            data
+                        });
+                    }).catch(err => {
+                        res.status(500).send({
+                            message: err.message || "Some error occured while signing the user in."
+                        })
+                    })
+                }
             }
-        }
-    })
+        })
+    }
 }
 
 // "delete" / sign out of user session
@@ -69,7 +73,6 @@ exports.findOne = (req, res) => {
             });
         }
     })
-
 }
 
 // verify user sign in / sessionId
@@ -91,5 +94,4 @@ exports.verifyUserSession = (req, res) => {
             })
         }
     })
-
 }

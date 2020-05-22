@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 
 const UserSessionSchema = new mongoose.Schema({
-    userId: String,
+    userId: {
+        type: String,
+        required: true
+    },
     timestamp: {
         type: Date,
         default: Date.now()
