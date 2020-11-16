@@ -3,6 +3,6 @@
 * Express
 * Mongoose
 * Multer / Multer-s3
-* MongoDB / mLab
 * AWS-S3
+* MongoDB / Atlas
 * Deployed with Heroku
